@@ -12,7 +12,7 @@ Key features
 - Browse movies and available screenings
 - Seat selection and booking flow
 - Booking history and reporting (Views/Report included)
-- Admin pages for managing movies, showtimes, and pricing
+- Admin pages for managing movies, and showtimes
 
 Tech stack
 ---------
@@ -49,20 +49,3 @@ Local setup
    dotnet run
 
 6. Open the app in your browser (example): https://localhost:5001 or the URL shown in the console.
-
-Project structure (high level)
------------------------------
-- Pages / Views / Controllers — UI and routing (Razor Pages views and layouts)
-- Models — domain and view models
-- Data — DbContext, migrations, and seed logic
-- Views/Report — reporting UI (current working file: Views/Report/Index.cshtml)
-
-Testing & development notes
----------------------------
-- Use EF Core migrations to evolve the schema.
-- Seed sample data or create via admin pages if seed logic is included.
-- Adjust logging, connection strings, and environment settings via appsettings.{Environment}.json or environment variables.
-
-Contributing
------------
-- Fork the repo, create a feature branch, add tests where applicable, and submit a pull request with a clear description of changes.
