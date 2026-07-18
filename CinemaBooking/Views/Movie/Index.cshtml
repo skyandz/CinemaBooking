@@ -7,20 +7,23 @@
 <h1>Movies</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">+Create New</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MovieName)
+                @* @Html.DisplayNameFor(model => model.MovieName) *@
+                Movie Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                Start Date
+                @* @Html.DisplayNameFor(model => model.StartDate) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StopDate)
+                Stop Date
+                @* @Html.DisplayNameFor(model => model.StopDate) *@
             </th>
             <th></th>
         </tr>
@@ -35,11 +38,11 @@
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
+                    @item.StartDate.ToString("dd/MM/yyyy")
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.StopDate)
+                    @item.StopDate.ToString("dd/MM/yyyy")
                 </td>
 
                 <td>

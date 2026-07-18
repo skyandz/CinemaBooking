@@ -19,16 +19,22 @@
                 <span asp-validation-for="MovieName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="StartDate" class="form-label"></label>
+                <input asp-for="StartDate"
+                       type="date"
+                       class="form-control" />
+                <span asp-validation-for="StartDate"
+                      class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="StopDate" class="control-label"></label>
-                <input asp-for="StopDate" class="form-control" />
-                <span asp-validation-for="StopDate" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="StopDate" class="form-label"></label>
+                <input asp-for="StopDate"
+                       type="date"
+                       class="form-control" />
+                <span asp-validation-for="StopDate"
+                      class="text-danger"></span>
             </div>
 
 
