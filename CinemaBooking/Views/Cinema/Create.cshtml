@@ -1,0 +1,44 @@
+@model CinemaBooking.Models.Cinema
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Cinema</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="CinemaName" class="control-label"></label>
+                <input asp-for="CinemaName" class="form-control" />
+                <span asp-validation-for="CinemaName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RowCount" class="control-label"></label>
+                <input asp-for="RowCount" class="form-control" />
+                <span asp-validation-for="RowCount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ColumnCount" class="control-label"></label>
+                <input asp-for="ColumnCount" class="form-control" />
+                <span asp-validation-for="ColumnCount" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
