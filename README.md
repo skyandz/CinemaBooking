@@ -66,11 +66,3 @@ Testing & development notes
 Contributing
 -----------
 - Fork the repo, create a feature branch, add tests where applicable, and submit a pull request with a clear description of changes.
-
-License
--------
-Add a LICENSE file and specify the project's license.
-
-Need more detail?
-------------------
-I can customize the README (add commands, deployment steps, or example connection strings) or add a contributing guide and license file if you want.
