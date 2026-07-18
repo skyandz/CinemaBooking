@@ -1,8 +1,303 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container home-page">
+
+    <!-- Hero Section -->
+    <section class="home-hero">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="hero-badge">
+                    <i class="bi bi-film me-2"></i>
+                    Cinema Management System
+                </span>
+
+                <h1 class="hero-title">
+                    CinemaBooking
+                    <span>System</span>
+                </h1>
+
+                <h2 class="hero-subtitle">
+                    Cinema Management &amp; Online Booking Platform
+                </h2>
+
+                <p class="hero-description">
+                    ระบบเว็บแอปพลิเคชันสำหรับจัดการข้อมูลภาพยนตร์
+                    โรงภาพยนตร์ รอบฉาย การจองที่นั่ง
+                    และรายงานสรุปข้อมูลภายในระบบ
+                </p>
+
+                <div class="hero-actions">
+                    <a asp-controller="Movie"
+                       asp-action="Index"
+                       class="btn btn-primary btn-lg">
+                        <i class="bi bi-camera-reels me-2"></i>
+                        Browse Movies
+                    </a>
+
+                    <a asp-controller="Report"
+                       asp-action="Index"
+                       class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-bar-chart-line me-2"></i>
+                        View Reports
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="hero-visual">
+                    <div class="hero-visual-icon">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+
+                    <h3>CinemaBooking</h3>
+
+                    <p>
+                        Manage movies, schedules, bookings
+                        and reports in one place.
+                    </p>
+
+                    <div class="hero-mini-flow">
+                        <span>Movie</span>
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Schedule</span>
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Booking</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="home-section">
+        <div class="section-heading">
+            <span class="section-label">Key Features</span>
+            <h2>ระบบสามารถทำอะไรได้บ้าง</h2>
+
+            <p>
+                ฟังก์ชันหลักสำหรับจัดการข้อมูลและกระบวนการจองตั๋วภาพยนตร์
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg">
+                <a asp-controller="Movie"
+                   asp-action="Index"
+                   class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-camera-reels"></i>
+                    </div>
+
+                    <h3>Movies</h3>
+
+                    <p>
+                        เพิ่ม แก้ไข ลบ และตรวจสอบข้อมูลภาพยนตร์ในระบบ
+                    </p>
+
+                    <span class="feature-link">
+                        Manage Movies
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg">
+                <a asp-controller="Cinema"
+                   asp-action="Index"
+                   class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+
+                    <h3>Cinemas</h3>
+
+                    <p>
+                        จัดการข้อมูลโรงภาพยนตร์ จำนวนแถว และจำนวนที่นั่ง
+                    </p>
+
+                    <span class="feature-link">
+                        Manage Cinemas
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg">
+                <a asp-controller="Schedule"
+                   asp-action="Index"
+                   class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+
+                    <h3>Schedules</h3>
+
+                    <p>
+                        กำหนดวันที่ รอบฉาย ภาพยนตร์ และโรงภาพยนตร์
+                    </p>
+
+                    <span class="feature-link">
+                        View Schedules
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg">
+                <a asp-controller="Booking"
+                   asp-action="Index"
+                   class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+
+                    <h3>Bookings</h3>
+
+                    <p>
+                        บันทึกข้อมูลการจองและเลือกที่นั่งสำหรับรอบฉาย
+                    </p>
+
+                    <span class="feature-link">
+                        Manage Bookings
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg">
+                <a asp-controller="Report"
+                   asp-action="Index"
+                   class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-bar-chart-line"></i>
+                    </div>
+
+                    <h3>Reports</h3>
+
+                    <p>
+                        แสดงข้อมูลสรุปและสถิติจากฐานข้อมูล ณ เวลาปัจจุบัน
+                    </p>
+
+                    <span class="feature-link">
+                        View Reports
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="home-section">
+        <div class="workflow-panel">
+            <div class="section-heading text-center">
+                <span class="section-label">System Workflow</span>
+                <h2>ขั้นตอนการทำงานของระบบ</h2>
+
+                <p>
+                    เริ่มจากการเตรียมข้อมูลภาพยนตร์และรอบฉาย
+                    ก่อนบันทึกการจองและแสดงผลในรายงาน
+                </p>
+            </div>
+
+            <div class="workflow-list">
+                <div class="workflow-item">
+                    <div class="workflow-number">1</div>
+                    <div class="workflow-icon">
+                        <i class="bi bi-camera-reels"></i>
+                    </div>
+
+                    <h3>Movie</h3>
+                    <p>เพิ่มข้อมูลภาพยนตร์</p>
+                </div>
+
+                <div class="workflow-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+
+                <div class="workflow-item">
+                    <div class="workflow-number">2</div>
+                    <div class="workflow-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+
+                    <h3>Schedule</h3>
+                    <p>กำหนดรอบและโรงฉาย</p>
+                </div>
+
+                <div class="workflow-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+
+                <div class="workflow-item">
+                    <div class="workflow-number">3</div>
+                    <div class="workflow-icon">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+
+                    <h3>Booking</h3>
+                    <p>จองและเลือกที่นั่ง</p>
+                </div>
+
+                <div class="workflow-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+
+                <div class="workflow-item">
+                    <div class="workflow-number">4</div>
+                    <div class="workflow-icon">
+                        <i class="bi bi-bar-chart-line"></i>
+                    </div>
+
+                    <h3>Report</h3>
+                    <p>ตรวจสอบข้อมูลสรุป</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="home-section">
+        <div class="technology-panel">
+            <div>
+                <span class="section-label">Technology Stack</span>
+                <h2>เทคโนโลยีที่ใช้ในโปรเจกต์</h2>
+
+                <p>
+                    พัฒนาด้วยสถาปัตยกรรม ASP.NET Core MVC
+                    เชื่อมต่อฐานข้อมูลผ่าน Entity Framework Core
+                </p>
+            </div>
+
+            <div class="technology-list">
+                <span class="technology-badge">
+                    <i class="bi bi-code-slash"></i>
+                    C#
+                </span>
+
+                <span class="technology-badge">
+                    ASP.NET Core MVC
+                </span>
+
+                <span class="technology-badge">
+                    Entity Framework Core
+                </span>
+
+                <span class="technology-badge">
+                    SQL Server
+                </span>
+
+                <span class="technology-badge">
+                    Bootstrap 5
+                </span>
+
+                <span class="technology-badge">
+                    Chart.js
+                </span>
+            </div>
+        </div>
+    </section>
+
 </div>
