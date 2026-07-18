@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CinemaBooking.Data;
 using CinemaBooking.Models;
+using CinemaBooking.ViewModels;
 
 public class ScheduleController : Controller
 {
@@ -48,28 +49,130 @@ public class ScheduleController : Controller
     // GET: Schedule/Create
     public async Task<IActionResult> Create()
     {
-        await LoadDropdowns();
+        var viewModel = new ScheduleCreateViewModel();
 
-        return View();
+        await LoadCreateDropdownsAsync(viewModel);
+
+        return View(viewModel);
     }
 
     // POST: Schedule/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("MovieId,CinemaId,ShowDate,ShowTime")] Schedule schedule)
+        ScheduleCreateViewModel viewModel)
     {
-        if (ModelState.IsValid)
-        {
-            _context.Schedules.Add(schedule);
-            await _context.SaveChangesAsync();
+        viewModel.SelectedPeriods ??= new List<ShowPeriod>();
 
-            return RedirectToAction(nameof(Index));
+        var movie = await _context.Movies
+            .FirstOrDefaultAsync(m => m.MovieId == viewModel.MovieId);
+
+        if (movie == null)
+        {
+            ModelState.AddModelError(
+                nameof(viewModel.MovieId),
+                "ไม่พบข้อมูลภาพยนตร์"
+            );
         }
 
-        await LoadDropdowns();
+        var cinemaExists = await _context.Cinemas
+            .AnyAsync(c => c.CinemaId == viewModel.CinemaId);
 
-        return View(schedule);
+        if (!cinemaExists)
+        {
+            ModelState.AddModelError(
+                nameof(viewModel.CinemaId),
+                "ไม่พบข้อมูลโรงภาพยนตร์"
+            );
+        }
+
+        if (viewModel.SelectedPeriods.Count == 0)
+        {
+            ModelState.AddModelError(
+                nameof(viewModel.SelectedPeriods),
+                "กรุณาเลือกรอบฉายอย่างน้อย 1 รอบ"
+            );
+        }
+
+        if (movie != null)
+        {
+            var showDate = viewModel.ShowDate.Date;
+            var startDate = movie.StartDate.Date;
+            var stopDate = movie.StopDate.Date;
+
+            if (showDate < startDate || showDate > stopDate)
+            {
+                ModelState.AddModelError(
+                    nameof(viewModel.ShowDate),
+                    $"วันที่ฉายต้องอยู่ระหว่าง " +
+                    $"{startDate:dd/MM/yyyy} - {stopDate:dd/MM/yyyy}"
+                );
+            }
+        }
+
+        // ป้องกันค่าซ้ำที่ส่งมาจากหน้าเว็บ
+        viewModel.SelectedPeriods = viewModel.SelectedPeriods
+            .Distinct()
+            .ToList();
+
+        var existingPeriods = await _context.Schedules
+            .Where(s =>
+                s.MovieId == viewModel.MovieId &&
+                s.CinemaId == viewModel.CinemaId &&
+                s.ShowDate.Date == viewModel.ShowDate.Date)
+            .Select(s => s.ShowPeriod)
+            .ToListAsync();
+
+        var duplicatedPeriods = viewModel.SelectedPeriods
+            .Where(period => existingPeriods.Contains(period))
+            .ToList();
+
+        if (duplicatedPeriods.Count > 0)
+        {
+            var periodNames = duplicatedPeriods
+                .Select(GetShowPeriodName);
+
+            ModelState.AddModelError(
+                string.Empty,
+                $"รอบฉายนี้มีอยู่แล้ว: {string.Join(", ", periodNames)}"
+            );
+        }
+
+        var totalPeriods =
+            existingPeriods.Count + viewModel.SelectedPeriods.Count;
+
+        if (totalPeriods > 3)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                $"เพิ่มรอบฉายไม่ได้ เนื่องจากวันดังกล่าวจะมีทั้งหมด " +
+                $"{totalPeriods} รอบ ซึ่งเกินจำนวนสูงสุด 3 รอบต่อวัน"
+            );
+        }
+
+        if (!ModelState.IsValid)
+        {
+            await LoadCreateDropdownsAsync(viewModel);
+            return View(viewModel);
+        }
+
+        foreach (var period in viewModel.SelectedPeriods)
+        {
+            _context.Schedules.Add(new Schedule
+            {
+                MovieId = viewModel.MovieId,
+                CinemaId = viewModel.CinemaId,
+                ShowDate = viewModel.ShowDate.Date,
+                ShowPeriod = period
+            });
+        }
+
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] =
+            "เพิ่มรอบฉายเรียบร้อยแล้ว";
+
+        return RedirectToAction(nameof(Index));
     }
 
     // GET: Schedule/Edit/5
@@ -97,7 +200,7 @@ public class ScheduleController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
         int scheduleid,
-        [Bind("ScheduleId,MovieId,CinemaId,ShowDate,ShowTime")]
+        [Bind("ScheduleId,MovieId,CinemaId,ShowDate,ShowPeriod")]
         Schedule schedule)
     {
         if (scheduleid != schedule.ScheduleId)
@@ -185,5 +288,41 @@ public class ScheduleController : Controller
     private bool ScheduleExists(int scheduleid)
     {
         return _context.Schedules.Any(s => s.ScheduleId == scheduleid);
+    }
+
+    private async Task LoadCreateDropdownsAsync(
+    ScheduleCreateViewModel viewModel)
+    {
+        viewModel.Movies = await _context.Movies
+            .OrderBy(m => m.MovieName)
+            .Select(m => new SelectListItem
+            {
+                Value = m.MovieId.ToString(),
+                Text = m.MovieName,
+                Selected = m.MovieId == viewModel.MovieId
+            })
+            .ToListAsync();
+
+        viewModel.Cinemas = await _context.Cinemas
+            .OrderBy(c => c.CinemaName)
+            .Select(c => new SelectListItem
+            {
+                Value = c.CinemaId.ToString(),
+                Text = c.CinemaName,
+                Selected = c.CinemaId == viewModel.CinemaId
+            })
+            .ToListAsync();
+    }
+
+    private static string GetShowPeriodName(ShowPeriod period)
+    {
+        return period switch
+        {
+            ShowPeriod.Morning => "รอบเช้า",
+            ShowPeriod.Afternoon => "รอบกลางวัน",
+            ShowPeriod.Evening => "รอบเย็น",
+            ShowPeriod.Night => "รอบดึก",
+            _ => "-"
+        };
     }
 }

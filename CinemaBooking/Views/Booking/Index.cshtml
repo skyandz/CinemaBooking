@@ -91,8 +91,26 @@
                 </p>
 
                 <p class="mb-0">
-                    <strong>เวลา:</strong>
-                    @Model.ShowTime?.ToString(@"hh\:mm")
+                    <strong>รอบฉาย:</strong>
+
+                    @switch (Model.ShowPeriod)
+                    {
+                        case CinemaBooking.Models.ShowPeriod.Morning:
+                            <span>รอบเช้า</span>
+                            break;
+
+                        case CinemaBooking.Models.ShowPeriod.Afternoon:
+                            <span>รอบกลางวัน</span>
+                            break;
+
+                        case CinemaBooking.Models.ShowPeriod.Evening:
+                            <span>รอบเย็น</span>
+                            break;
+
+                        case CinemaBooking.Models.ShowPeriod.Night:
+                            <span>รอบดึก</span>
+                            break;
+                    }
                 </p>
 
             </div>

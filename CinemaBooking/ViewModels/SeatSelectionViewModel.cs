@@ -12,7 +12,7 @@
 
 //    public DateTime ShowDate { get; set; }
 
-//    public TimeSpan ShowTime { get; set; }
+//    public TimeSpan ShowPeriod { get; set; }
 
 //    public int RowCount { get; set; }
 

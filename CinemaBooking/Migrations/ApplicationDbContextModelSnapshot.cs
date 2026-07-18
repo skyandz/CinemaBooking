@@ -133,8 +133,8 @@ namespace CinemaBooking.Migrations
                     b.Property<DateTime>("ShowDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("ShowTime")
-                        .HasColumnType("time");
+                    b.Property<int>("ShowPeriod")
+                        .HasColumnType("int");
 
                     b.HasKey("ScheduleId");
 

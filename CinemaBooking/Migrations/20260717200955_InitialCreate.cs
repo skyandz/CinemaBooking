@@ -64,7 +64,7 @@ namespace CinemaBooking.Migrations
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     CinemaId = table.Column<int>(type: "int", nullable: false),
                     ShowDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ShowTime = table.Column<TimeSpan>(type: "time", nullable: false)
+                    ShowPeriod = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -55,7 +55,7 @@ public class BookingController : Controller
         viewModel.MovieName = schedule.Movie.MovieName;
         viewModel.CinemaName = schedule.Cinema.CinemaName;
         viewModel.ShowDate = schedule.ShowDate;
-        viewModel.ShowTime = schedule.ShowTime;
+        viewModel.ShowPeriod = schedule.ShowPeriod;
 
         viewModel.RowCount = schedule.Cinema.RowCount;
         viewModel.ColumnCount = schedule.Cinema.ColumnCount;
@@ -334,14 +334,14 @@ public class BookingController : Controller
         viewModel.Schedules = await _context.Schedules
             .Where(s => s.MovieId == viewModel.MovieId)
             .OrderBy(s => s.ShowDate)
-            .ThenBy(s => s.ShowTime)
+            .ThenBy(s => s.ShowPeriod)
             .Select(s => new SelectListItem
             {
                 Value = s.ScheduleId.ToString(),
 
                 Text =
-                    $"{s.ShowDate:dd/MM/yyyy} " +
-                    $"{s.ShowTime:hh\\:mm} - " +
+                    $"{s.ShowDate:dd/MM/yyyy} - " +
+                    $"{GetShowPeriodName(s.ShowPeriod)} - " +
                     $"{s.Cinema.CinemaName}",
 
                 Selected =
@@ -425,5 +425,17 @@ public class BookingController : Controller
         }
 
         return seats;
+    }
+
+    private static string GetShowPeriodName(ShowPeriod period)
+    {
+        return period switch
+        {
+            ShowPeriod.Morning => "รอบเช้า",
+            ShowPeriod.Afternoon => "รอบกลางวัน",
+            ShowPeriod.Evening => "รอบเย็น",
+            ShowPeriod.Night => "รอบดึก",
+            _ => "-"
+        };
     }
 }

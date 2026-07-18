@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260717213618_AddUniqueSeatConstraint")]
-    partial class AddUniqueSeatConstraint
+    [Migration("20260718160444_ChangeShowPeriodToShowPeriod")]
+    partial class ChangeShowPeriodToShowPeriod
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,8 +136,8 @@ namespace CinemaBooking.Migrations
                     b.Property<DateTime>("ShowDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("ShowPeriod")
-                        .HasColumnType("time");
+                    b.Property<int>("ShowPeriod")
+                        .HasColumnType("int");
 
                     b.HasKey("ScheduleId");
 

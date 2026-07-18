@@ -7,8 +7,7 @@
 <h1>Schedules</h1>
 
 <p>
-    <a asp-action="Create"
-       class="btn btn-primary">
+    <a asp-action="Create">
         Create New Schedule
     </a>
 </p>
@@ -43,7 +42,7 @@
                 </td>
 
                 <td>
-                    @item.ShowTime.ToString(@"hh\:mm")
+                    @Html.DisplayFor(modelItem => item.ShowPeriod)
                 </td>
 
                 <td>

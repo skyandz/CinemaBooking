@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-
+using CinemaBooking.Models;
 namespace CinemaBooking.ViewModels;
 
 public class BookingPageViewModel
@@ -22,7 +22,7 @@ public class BookingPageViewModel
 
     public DateTime? ShowDate { get; set; }
 
-    public TimeSpan? ShowTime { get; set; }
+    public ShowPeriod? ShowPeriod { get; set; }
 
     // ขนาดผังที่นั่ง
     public int RowCount { get; set; }
