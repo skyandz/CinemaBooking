@@ -1,61 +1,249 @@
-﻿@model IEnumerable<CinemaBooking.Models.Booking>
+﻿@model CinemaBooking.ViewModels.BookingPageViewModel
 
 @{
-    ViewData["Title"] = "Bookings";
+    ViewData["Title"] = "Ticket Booking";
 }
 
-<h1>Bookings</h1>
+<div class="container mt-4">
 
-<p>
-    <a asp-action="Create"
-       class="btn btn-primary">
-        Create Booking
-    </a>
-</p>
+    <h2 class="mb-3">Ticket Booking Prototype</h2>
 
-<table class="table">
+    <hr />
 
-    <thead>
-        <tr>
-            <th>Booking ID</th>
-            <th>Phone Number</th>
-            <th>Booking Date</th>
-            <th>Seats</th>
-            <th></th>
-        </tr>
-    </thead>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
 
-    <tbody>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 
-        @foreach (var booking in Model)
-        {
-            <tr>
-                <td>
-                    @booking.BookingId
-                </td>
+    <form asp-action="Index"
+          method="get"
+          class="row g-3 align-items-end mb-4">
 
-                <td>
-                    @booking.PhoneNumber
-                </td>
+        <div class="col-md-4">
+            <label asp-for="MovieId"
+                   class="form-label">
+                เลือกเรื่องหนัง
+            </label>
 
-                <td>
-                    @booking.BookingDate.ToString("dd/MM/yyyy HH:mm")
-                </td>
+            <select asp-for="MovieId"
+                    asp-items="Model.Movies"
+                    class="form-select"
+                    id="movieSelect">
 
-                <td>
-                    @string.Join(", ",
-                        booking.BookingDetails.Select(bd => bd.SeatNo))
-                </td>
+                <option value="">
+                    == เลือกเรื่องหนัง ==
+                </option>
+            </select>
+        </div>
 
-                <td>
-                    <a asp-action="Details"
-                       asp-route-bookingid="@booking.BookingId">
-                        Details
-                    </a>
-                </td>
-            </tr>
+        <div class="col-md-5">
+            <label asp-for="ScheduleId"
+                   class="form-label">
+                เลือกวันที่และรอบฉาย
+            </label>
+
+            <select asp-for="ScheduleId"
+                    asp-items="Model.Schedules"
+                    class="form-select"
+                    id="scheduleSelect">
+
+                <option value="">
+                    == เลือกวันที่ (รอบฉาย) ==
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <button type="submit"
+                    class="btn btn-primary w-100">
+                ค้นหา
+            </button>
+        </div>
+
+    </form>
+
+    @if (Model.ScheduleId != null)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+
+                <h4 class="card-title">
+                    @Model.MovieName
+                </h4>
+
+                <p class="mb-1">
+                    <strong>โรงภาพยนตร์:</strong>
+                    @Model.CinemaName
+                </p>
+
+                <p class="mb-1">
+                    <strong>วันที่:</strong>
+                    @Model.ShowDate?.ToString("dd/MM/yyyy")
+                </p>
+
+                <p class="mb-0">
+                    <strong>เวลา:</strong>
+                    @Model.ShowTime?.ToString(@"hh\:mm")
+                </p>
+
+            </div>
+        </div>
+
+        <h4 class="mb-3">
+            ที่นั่งสำหรับจองและยกเลิกการจอง
+        </h4>
+
+        <p class="text-muted">
+            สีขาวคือที่นั่งว่าง และสีเทาคือที่นั่งที่ถูกจองแล้ว
+        </p>
+
+        <form method="post"
+              id="bookingForm">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   name="movieId"
+                   value="@Model.MovieId" />
+
+            <input type="hidden"
+                   name="scheduleId"
+                   value="@Model.ScheduleId" />
+
+            <div class="seat-map mb-4">
+
+                @for (var row = 1;
+                     row <= Model.RowCount;
+                     row++)
+                {
+                    <div class="seat-row">
+
+                        @foreach (var seat in Model.Seats
+                            .Where(s =>
+                                s.SeatNo.EndsWith(
+                                    row.ToString()
+                                )))
+                        {
+                            var cssClass =
+                                seat.IsBooked
+                                    ? "seat booked"
+                                    : "seat available";
+
+                            <label class="@cssClass">
+
+                                <input type="checkbox"
+                                       name="selectedSeats"
+                                       value="@seat.SeatNo"
+                                       class="seat-checkbox" />
+
+                                <span class="seat-number">
+                                    @seat.SeatNo
+                                </span>
+
+                                @if (seat.IsBooked)
+                                {
+                                    <span class="seat-phone">
+                                        (@seat.PhoneNumber)
+                                    </span>
+                                }
+
+                            </label>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber"
+                           class="form-label">
+                        เบอร์โทรศัพท์
+                    </label>
+
+                    <input asp-for="PhoneNumber"
+                           name="phoneNumber"
+                           class="form-control"
+                           placeholder="กรอกเบอร์โทรศัพท์" />
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit"
+                            formaction="@Url.Action("Book", "Booking")"
+                            class="btn btn-success w-100">
+                        จอง
+                    </button>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit"
+                            formaction="@Url.Action("Cancel", "Booking")"
+                            class="btn btn-danger w-100">
+                        ยกเลิกการจอง
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+    }
+
+</div>
+
+@section Scripts
+{
+    <script>
+        const movieSelect =
+            document.getElementById("movieSelect");
+
+        if (movieSelect) {
+            movieSelect.addEventListener("change", function () {
+                document.getElementById(
+                    "scheduleSelect"
+                ).value = "";
+
+                this.form.submit();
+            });
         }
 
-    </tbody>
+        const seatCheckboxes =
+            document.querySelectorAll(".seat-checkbox");
 
-</table>
+        seatCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+
+                const checkedSeats =
+                    document.querySelectorAll(
+                        ".seat-checkbox:checked"
+                    );
+
+                if (checkedSeats.length > 4) {
+                    this.checked = false;
+
+                    alert(
+                        "สามารถเลือกได้ไม่เกิน 4 ที่นั่ง"
+                    );
+
+                    return;
+                }
+
+                this.closest(".seat")
+                    .classList.toggle(
+                        "selected",
+                        this.checked
+                    );
+            });
+        });
+    </script>
+}
