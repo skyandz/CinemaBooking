@@ -1,0 +1,93 @@
+﻿@model CinemaBooking.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<h1>Booking Details</h1>
+
+<hr />
+
+<dl class="row">
+
+    <dt class="col-sm-2">
+        Booking ID
+    </dt>
+
+    <dd class="col-sm-10">
+        @Model.BookingId
+    </dd>
+
+
+    <dt class="col-sm-2">
+        Phone Number
+    </dt>
+
+    <dd class="col-sm-10">
+        @Model.PhoneNumber
+    </dd>
+
+
+    <dt class="col-sm-2">
+        Booking Date
+    </dt>
+
+    <dd class="col-sm-10">
+        @Model.BookingDate.ToString("dd/MM/yyyy HH:mm")
+    </dd>
+
+</dl>
+
+<h4>Booking Details</h4>
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Cinema</th>
+            <th>Show Date</th>
+            <th>Show Time</th>
+            <th>Seat</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var detail in Model.BookingDetails)
+        {
+            <tr>
+
+                <td>
+                    @detail.Schedule.Movie.MovieName
+                </td>
+
+                <td>
+                    @detail.Schedule.Cinema.CinemaName
+                </td>
+
+                <td>
+                    @detail.Schedule.ShowDate.ToString("dd/MM/yyyy")
+                </td>
+
+                <td>
+                    @detail.Schedule.ShowTime.ToString(@"hh\:mm")
+                </td>
+
+                <td>
+                    @detail.SeatNo
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+
+    Back to List
+
+</a>

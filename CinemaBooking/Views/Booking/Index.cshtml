@@ -1,0 +1,61 @@
+﻿@model IEnumerable<CinemaBooking.Models.Booking>
+
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<h1>Bookings</h1>
+
+<p>
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Create Booking
+    </a>
+</p>
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Phone Number</th>
+            <th>Booking Date</th>
+            <th>Seats</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>
+                    @booking.BookingId
+                </td>
+
+                <td>
+                    @booking.PhoneNumber
+                </td>
+
+                <td>
+                    @booking.BookingDate.ToString("dd/MM/yyyy HH:mm")
+                </td>
+
+                <td>
+                    @string.Join(", ",
+                        booking.BookingDetails.Select(bd => bd.SeatNo))
+                </td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-bookingid="@booking.BookingId">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>

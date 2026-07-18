@@ -1,0 +1,98 @@
+﻿@model CinemaBooking.Models.Schedule
+
+@{
+    ViewData["Title"] = "Select Seat";
+
+    var bookedSeats =
+        ViewBag.BookedSeats as List<string>
+        ?? new List<string>();
+}
+
+<h1>Select Seat</h1>
+
+<hr />
+
+<h4>Booking Information</h4>
+
+<p>
+    <strong>Phone:</strong>
+    @ViewBag.PhoneNumber
+</p>
+
+<p>
+    <strong>Movie:</strong>
+    @Model.Movie.MovieName
+</p>
+
+<p>
+    <strong>Cinema:</strong>
+    @Model.Cinema.CinemaName
+</p>
+
+<p>
+    <strong>Date:</strong>
+    @Model.ShowDate.ToString("dd/MM/yyyy")
+</p>
+
+<p>
+    <strong>Time:</strong>
+    @Model.ShowTime.ToString(@"hh\:mm")
+</p>
+
+<hr />
+
+<h4>Select Seat</h4>
+
+<form asp-action="Confirm" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden"
+           name="phoneNumber"
+           value="@ViewBag.PhoneNumber" />
+
+    <input type="hidden"
+           name="scheduleId"
+           value="@Model.ScheduleId" />
+
+    <div class="mb-3">
+
+        @for (int row = 0; row < Model.Cinema.RowCount; row++)
+        {
+            <div class="mb-2">
+
+                @for (int column = 1;
+                      column <= Model.Cinema.ColumnCount;
+                      column++)
+                {
+                    var seatNo =
+                        $"{(char)('A' + row)}{column}";
+
+                    var isBooked =
+                        bookedSeats.Contains(seatNo);
+
+                    <label class="me-2">
+
+                        <input type="checkbox"
+                               name="selectedSeats"
+                               value="@seatNo"
+                        @(isBooked ? "disabled" : "") />
+
+                        @seatNo
+
+                    </label>
+                }
+
+            </div>
+        }
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+
+        Confirm Booking
+
+    </button>
+
+</form>
