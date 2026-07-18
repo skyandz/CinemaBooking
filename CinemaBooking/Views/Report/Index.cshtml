@@ -1,0 +1,260 @@
+﻿@model CinemaBooking.Models.ViewModels.ReportViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Report Dashboard";
+}
+
+
+
+
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1>Report Dashboard</h1>
+            <p class="text-muted mb-0">
+                ข้อมูลสรุปล่าสุดจากระบบ Cinema Booking
+            </p>
+        </div>
+
+        <div class="text-end text-muted">
+            <small>Last updated</small>
+            <div>
+                @Model.LastUpdated.ToString("dd/MM/yyyy HH:mm:ss")
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Total Bookings
+                    </h6>
+
+                    <h2 class="card-title">
+                        @Model.TotalBookings
+                    </h2>
+
+                    <p class="card-text mb-0">
+                        จำนวนรายการจองทั้งหมด
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Total Tickets
+                    </h6>
+
+                    <h2 class="card-title">
+                        @Model.TotalTickets
+                    </h2>
+
+                    <p class="card-text mb-0">
+                        จำนวนที่นั่งที่ถูกจองทั้งหมด
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Total Movies
+                    </h6>
+
+                    <h2 class="card-title">
+                        @Model.TotalMovies
+                    </h2>
+
+                    <p class="card-text mb-0">
+                        จำนวนภาพยนตร์ทั้งหมด
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Total Cinemas
+                    </h6>
+
+                    <h2 class="card-title">
+                        @Model.TotalCinemas
+                    </h2>
+
+                    <p class="card-text mb-0">
+                        จำนวนโรงภาพยนตร์ทั้งหมด
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5 class="card-title mb-1">
+                            Top Movies
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            ภาพยนตร์ที่มีจำนวนที่นั่งถูกจองมากที่สุด
+                        </p>
+                    </div>
+
+                    @if (Model.TopMovies.Any())
+                    {
+                        <div style="height: 350px;">
+                            <canvas id="topMoviesChart"></canvas>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-5">
+                            ยังไม่มีข้อมูลการจองสำหรับแสดงกราฟ
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Top Movies Ranking
+                    </h5>
+
+                    @if (Model.TopMovies.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @for (int index = 0; index < Model.TopMovies.Count; index++)
+                            {
+                                var movie = Model.TopMovies[index];
+
+                                <div class="list-group-item px-0 d-flex
+                                    justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold me-2">
+                                            @(index + 1).
+                                        </span>
+
+                                        @movie.MovieName
+                                    </div>
+
+                                    <span class="badge bg-primary rounded-pill">
+                                        @movie.TicketCount ที่นั่ง
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">
+                            ยังไม่มีข้อมูลการจอง
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        @if (Model.TopMovies.Any())
+        {
+            <script>
+                    const movieLabels =
+                                                @Html.Raw(JsonSerializer.Serialize(
+                                                                Model.TopMovies.Select(movie => movie.MovieName)
+        ));
+
+                    const movieTicketCounts =
+                                                @Html.Raw(JsonSerializer.Serialize(
+                                                                Model.TopMovies.Select(movie => movie.TicketCount)
+        ));
+
+                    const chartCanvas =
+                        document.getElementById("topMoviesChart");
+
+                    new Chart(chartCanvas, {
+                        type: "bar",
+
+                        data: {
+                            labels: movieLabels,
+
+                            datasets: [
+                                {
+                                    label: "จำนวนที่นั่งที่ถูกจอง",
+                                    data: movieTicketCounts,
+                                    borderWidth: 1,
+                                    borderRadius: 6
+                                }
+                            ]
+                        },
+
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.raw} ที่นั่ง`;
+                                        }
+                                    }
+                                }
+                            },
+
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+
+                                    ticks: {
+                                        precision: 0
+                                    },
+
+                                    title: {
+                                        display: true,
+                                        text: "จำนวนที่นั่ง"
+                                    }
+                                },
+
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: "ภาพยนตร์"
+                                    }
+                                }
+                            }
+                        }
+                    });
+            </script>
+        }
+    }
+
+
+</div>
+
