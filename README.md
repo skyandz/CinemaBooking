@@ -1,6 +1,7 @@
 CinemaBooking
 =============
 
+![Main page](pic/01_main-page.png))
 A Razor Pages web application for browsing movies, selecting seats, and making bookings.
 
 Summary
