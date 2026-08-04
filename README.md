@@ -1,4 +1,4 @@
-CinemaBooking
+Cinema Booking Web Application
 =============
 
 ![Main page](pics/01_main_page.png)
